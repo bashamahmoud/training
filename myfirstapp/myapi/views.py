@@ -4,6 +4,7 @@ from rest_framework.utils import json
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
+# url:http://127.0.0.1:8000/joke/get/<category> #GET request
 def get_joke(request, category):
     url = "https://jokeapi-v2.p.rapidapi.com/joke/" + category
 
@@ -18,7 +19,7 @@ def get_joke(request, category):
 
     print(response.text)
     body = response.json()['type']
-    if body == "twopart":
+    if body == "twopart":  # to display only the joke (it's two types of jokes)
         joke_part_one = response.json()['setup']
         joke_part_two = response.json()['delivery']
         joke = [joke_part_one, joke_part_two]
@@ -29,6 +30,7 @@ def get_joke(request, category):
         return HttpResponse(json.dumps(joke))
 
 
+# url:http://127.0.0.1:8000/joke/categories #GET request
 def get_category(request):
     url = "https://jokeapi-v2.p.rapidapi.com/categories"
 
@@ -43,12 +45,13 @@ def get_category(request):
 
     print(response.text)
     body = response.json()['categories']
-    body_json = json.dumps(body)
+    body_json = json.dumps(body)  # display only categories list as json
     return HttpResponse(body_json)
     pass
 
 
-@csrf_exempt
+# http://127.0.0.1:8000/joke/submit-joke #put or POST request ,joke as json in body
+@csrf_exempt  # The CSRF required by server
 def submit_joke(request):
     url = "https://jokeapi-v2.p.rapidapi.com/submit"
 
@@ -56,7 +59,7 @@ def submit_joke(request):
         "formatVersion": 2,
         "category": "Miscellaneous",
         "type": "single",
-        "joke": request.POST.get("joke"),
+        "joke": request.POST.get("joke"),  # get joke from body
         "flags": {
             "nsfw": False,
             "religious": False,
