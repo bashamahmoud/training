@@ -1,82 +1,92 @@
 import requests
 from django.http import HttpResponse
 from rest_framework.utils import json
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
 
 
-# url:http://127.0.0.1:8000/joke/get/<category> #GET request
-def get_joke(request, category):
-    url = "https://jokeapi-v2.p.rapidapi.com/joke/" + category
+class JokeApi(APIView):
+    def __init__(self):
+        self.headers = {}
+        self.query_string = {}
 
-    querystring = {"format": "json", "idRange": "0-150", "blacklistFlags": "nsfw,racist"}
+    def create_params(self, user_format):
+        if user_format:
+            self.query_string["format"] = user_format
 
-    headers = {
-        "X-RapidAPI-Key": "6c0ba2516dmsh21b1583473e4ddap183cc4jsn0af1b6d50837",
-        "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com"
-    }
+        else:
+            self.query_string["format"] = "json"
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    def extend_headers(self):
+        self.headers.update({"X-RapidAPI-Key": "6c0ba2516dmsh21b1583473e4ddap183cc4jsn0af1b6d50837",
+                             "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com",
+                             "content-type": "application/json"})
 
-    print(response.text)
-    body = response.json()['type']
-    if body == "twopart":  # to display only the joke (it's two types of jokes)
-        joke_part_one = response.json()['setup']
-        joke_part_two = response.json()['delivery']
-        joke = [joke_part_one, joke_part_two]
-        return HttpResponse(json.dumps(joke))
-        pass
-    else:
-        joke = response.json()['joke']
-        return HttpResponse(json.dumps(joke))
+    def get_joke(self, request, category):
+        url = "https://jokeapi-v2.p.rapidapi.com/joke/" + category
+        self.create_params(request.GET.get("format"))
+        self.extend_headers()
 
+        response = requests.request("GET", url, headers=self.headers,
+                                    params=self.query_string)
+        if self.query_string == ({"format": "json "}):
+            body = response.json()["type"]
+            if body == "twopart":  # to display only the joke (it's two types of jokes)
+                joke_part_one = response.json()["setup"]
+                joke_part_two = response.json()["delivery"]
+                joke = [joke_part_one, joke_part_two]
+                return HttpResponse(json.dumps(joke))
+            else:
+                joke = response.json()["joke"]
+                return HttpResponse(json.dumps(joke))
+        else:
+            return HttpResponse(response.text)
 
-# url:http://127.0.0.1:8000/joke/categories #GET request
-def get_category(request):
-    url = "https://jokeapi-v2.p.rapidapi.com/categories"
+    def get_category(self, request):
+        url = "https://jokeapi-v2.p.rapidapi.com/categories"
+        self.create_params(request.GET.get("format"))
+        print(self.query_string)
 
-    querystring = {"format": "json"}
+        self.extend_headers()
+        response = requests.request("GET", url, headers=self.headers,
+                                    params=self.query_string)
 
-    headers = {
-        "X-RapidAPI-Key": "6c0ba2516dmsh21b1583473e4ddap183cc4jsn0af1b6d50837",
-        "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com"
-    }
+        print("test")
+        print(response.text)
+        body = response.json()["categories"]
+        body_json = json.dumps(body)  # display only categories list as json
+        return HttpResponse(body_json)
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    @csrf_exempt  # The CSRF required by server
+    def submit_joke(self, request):
+        url = "https://jokeapi-v2.p.rapidapi.com/submit"
 
-    print(response.text)
-    body = response.json()['categories']
-    body_json = json.dumps(body)  # display only categories list as json
-    return HttpResponse(body_json)
-    pass
-
-
-# http://127.0.0.1:8000/joke/submit-joke #put or POST request ,joke as json in body
-@csrf_exempt  # The CSRF required by server
-def submit_joke(request):
-    url = "https://jokeapi-v2.p.rapidapi.com/submit"
-
-    payload = {
-        "formatVersion": 2,
-        "category": "Miscellaneous",
-        "type": "single",
-        "joke": request.POST.get("joke"),  # get joke from body
-        "flags": {
-            "nsfw": False,
-            "religious": False,
-            "political": False,
-            "racist": False,
-            "sexist": False
+        payload = {
+            "formatVersion": 2,
+            "category": "Miscellaneous",
+            "type": "single",
+            "joke": request.POST.get("joke"),  # get joke from body
+            "flags": {
+                "nsfw": False,
+                "religious": False,
+                "political": False,
+                "racist": False,
+                "sexist": False,
+            },
         }
-    }
-    headers = {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": "6c0ba2516dmsh21b1583473e4ddap183cc4jsn0af1b6d50837",
-        "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com"
-    }
+        self.extend_headers()
 
-    response = requests.request("PUT", url, json=payload, headers=headers)
+        response = requests.request("PUT", url, json=payload, headers=self.headers)
 
-    print(response.text)
+        print(response.text)
 
-    return HttpResponse(response.text)
-    pass
+        return HttpResponse(response.text)
+
+    def get(self, request, category=None):
+        if category:
+            return self.get_joke(request, category)
+        else:
+            return self.get_category(request)
+
+    def post(self, request):
+        return self.submit_joke(request)
