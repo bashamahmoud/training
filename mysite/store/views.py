@@ -37,7 +37,6 @@ class CustomerView(ModelViewSet):  # using a viewset insted of view
         return Response({'message': 'Customer deleted successfully'})
 
     # GET request: http://127.0.0.1:8000/store/customers/
-    # GET request: http://127.0.0.1:8000/store/customers/{pk}/
     def list(self, request):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
