@@ -2,7 +2,7 @@ from django.db import models
 
 
 # user
-class User(models.Model):
+class User(models.Model):  # parent
     username = models.CharField(max_length=60)
     email = models.EmailField(max_length=60, unique=True)
     password = models.CharField(max_length=60)
