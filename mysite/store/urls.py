@@ -1,6 +1,12 @@
-from . import views
-from django.urls import path
+
+from django.urls import path, include
+from rest_framework import routers
+
+from .views import CustomerView
+
+router = routers.SimpleRouter()  # simple router
+router.register(r'customers', CustomerView, basename='customer')
 
 urlpatterns = [
-    path('index', views.index, name='index'),
+    path('', include(router.urls)),
 ]
