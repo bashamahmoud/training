@@ -3,7 +3,7 @@ from .models import Customer
 
 
 # using serializers for viewset
-class CustomerSerializer(serializers.ModelSerializer):
+class DefaultCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ['id', 'username', 'email', 'password', 'address', 'phone', 'credit_card']
@@ -11,3 +11,10 @@ class CustomerSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+# for Update method
+class UpdateCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id', 'username', 'email', 'password', 'address', 'phone', 'credit_card']
+        read_only_fields = ["id", "email", "password"]  # set id to read only
