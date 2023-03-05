@@ -4,12 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Customer
-from .serializers import CustomerSerializer
+from . import serializers
 
 
-class CustomerView(ModelViewSet):  # using a viewset insted of view
+class CustomerView(ModelViewSet):  # using a viewset instead of view
     queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'update':
+            return serializers.UpdateCustomerSerializer  # Update method
+        else:
+            return serializers.DefaultCustomerSerializer  # Other methods
 
     # POST request: http://127.0.0.1:8000/store/customers/
     def create(self, request):
@@ -20,7 +25,7 @@ class CustomerView(ModelViewSet):  # using a viewset insted of view
         except IntegrityError:
             return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
         headers = self.get_success_headers(serializer.data)
-        return Response({'message': 'Customer updated successfully'}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'message': 'Customer added successfully'}, status=status.HTTP_201_CREATED, headers=headers)
 
     # PUT request: http://127.0.0.1:8000/store/customers/{pk}/
     def update(self, request, pk=None):
