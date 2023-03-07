@@ -12,9 +12,23 @@ class DefaultCustomerSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
+
 # for Update method
 class UpdateCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ['id', 'username', 'email', 'password', 'address', 'phone', 'credit_card']
         read_only_fields = ["id", "email", "password"]  # set id to read only
+
+# class ProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = '__all__'
+#
+#
+# class CartSerializer(serializers.ModelSerializer):
+#     product = ProductSerializer(read_only=True)
+#
+#     class Meta:
+#         model = Cart
+#         fields = '__all__'
