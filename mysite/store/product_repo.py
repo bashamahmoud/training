@@ -10,10 +10,12 @@ class ProductRepo:
     def create_product(request):
         try:
 
-            product = Product(name=request.POST["name"],
-                              description=request.POST["description"],
-                              price=request.POST["price"],
-                              in_invetory=request.POST["in_inventory"], )
+            product = Product(name=request.data.get("name"),
+                              description=request.data.get("description"),
+                              price=int(request.data.get("price")),
+                              in_inventory=int(request.data.get("in_inventory"))
+                              )
             product.save()
+            return request
         except Exception as e:
             exception_handler(e, "Product")

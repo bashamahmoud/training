@@ -41,8 +41,8 @@ class CustomerRepo:
     @staticmethod
     def update_customer(request_data, pk=None):
         try:
-            Customer.objects.filter(pk=pk).update(**request_data)
-            return True
+            return Customer.objects.filter(pk=pk).update(**request_data)
+
         except Exception as e:
             logger.error(f"Error updating customer: {e}")
             return exception_handler(e, "error")

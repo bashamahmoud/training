@@ -13,7 +13,7 @@ class CustomerView(viewsets.ViewSet):
     def list(self, request):
         customers = self.customer_component.get_customer()
         if not customers:
-            return JsonResponse({'error': 'error in request please try again'}, status=404)
+            return JsonResponse({'error': 'Error while retrieving customers list'}, status=404)
 
         return JsonResponse(customers, safe=False, status=200)
 

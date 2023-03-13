@@ -29,13 +29,10 @@ class Admin(User):
         return self.name
 
 
-from django.db import models
-
-
 class Product(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField()
-    price = models.DecimalField(decimal_places=10, max_digits=10)
+    price = models.IntegerField()
     in_inventory = models.IntegerField()
 
     def __str__(self):
