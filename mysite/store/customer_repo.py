@@ -1,6 +1,9 @@
+from rest_framework.views import exception_handler
 
 from .models import Customer
-from rest_framework.views import exception_handler
+import logging
+
+logger = logging.getLogger('store')
 
 
 class CustomerRepo:
@@ -13,13 +16,16 @@ class CustomerRepo:
             else:
                 return Customer.objects.all()
         except Exception as e:
+            logger.error(f"Error getting customers: {e}")
             return exception_handler(e, "error")
 
     @staticmethod
     def register_customer(customer):
         try:
-            customer.save()
+            customer.is_valid()
+            return customer.save()
         except Exception as e:
+            logger.error(f"Error registering customer: {e}")
             return exception_handler(e, "error")
 
     @staticmethod
@@ -29,6 +35,7 @@ class CustomerRepo:
             customer.delete()
             return True
         except Exception as e:
+            logger.error(f"Error deleting customer: {e}")
             return exception_handler(e, "error")
 
     @staticmethod
@@ -37,4 +44,5 @@ class CustomerRepo:
             Customer.objects.filter(pk=pk).update(**request_data)
             return True
         except Exception as e:
+            logger.error(f"Error updating customer: {e}")
             return exception_handler(e, "error")

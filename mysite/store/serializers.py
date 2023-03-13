@@ -1,5 +1,8 @@
 from rest_framework import serializers
+
 from .models import Customer
+
+
 # using serializers for viewset
 class DefaultCustomerSerializer(serializers.ModelSerializer):
     class Meta:
