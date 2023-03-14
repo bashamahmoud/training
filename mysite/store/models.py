@@ -35,9 +35,6 @@ class Product(models.Model):
     price = models.IntegerField()
     in_inventory = models.IntegerField()
 
-    def __str__(self):
-        return self.name
-
 # class Cart(models.Model):
 #     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 #     product = models.ForeignKey(Product, on_delete=models.CASCADE)
