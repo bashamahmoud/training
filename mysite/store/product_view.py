@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework import viewsets
 
 from .product_component import ProductComponent
@@ -30,7 +29,6 @@ class ProductView(viewsets.ViewSet):
     def create(self, request):
         product = self.product_component.create_product(request)
         if product:
-            print(product)
             return JsonResponse("server: product created successfully", safe=False, status=201)
         return JsonResponse("server: failed to creat product", safe=False)
 

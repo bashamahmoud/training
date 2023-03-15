@@ -3,24 +3,17 @@ import json
 from django.forms import model_to_dict
 from rest_framework.views import exception_handler
 import logging
+from .models import Product
 
 logger = logging.getLogger('store')
-
-from .models import Product
 
 
 class ProductRepo:
     @staticmethod
-    def create_product(request):
+    def create_product(product):
         try:
-
-            product = Product(name=request.data.get("name"),
-                              description=request.data.get("description"),
-                              price=int(request.data.get("price")),
-                              in_inventory=int(request.data.get("in_inventory"))
-                              )
-            product.save()
-            return request
+            product.is_valid()
+            return product.save()
         except Exception as e:
             logger.error(f"Error updating customer: {e}")
             return exception_handler(e, "Product")
@@ -29,11 +22,9 @@ class ProductRepo:
     def get_product(pk=None):
         try:
             if pk:
-                products = model_to_dict(Product.objects.get(pk=pk))
-
+                return Product.objects.get(pk=pk)
             else:
-                products = list(Product.objects.all().values())
-            return products
+                return Product.objects.all()
         except Exception as e:
             logger.error(f"Error updating customer: {e}")
             return exception_handler(e, "Product")
