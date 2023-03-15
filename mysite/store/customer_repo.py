@@ -1,7 +1,8 @@
+import logging
+
 from rest_framework.views import exception_handler
 
 from .models import Customer
-import logging
 
 logger = logging.getLogger('store')
 

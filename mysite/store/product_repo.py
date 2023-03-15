@@ -1,8 +1,8 @@
 import json
-
-from django.forms import model_to_dict
-from rest_framework.views import exception_handler
 import logging
+
+from rest_framework.views import exception_handler
+
 from .models import Product
 
 logger = logging.getLogger('store')
@@ -15,7 +15,7 @@ class ProductRepo:
             product.is_valid()
             return product.save()
         except Exception as e:
-            logger.error(f"Error updating customer: {e}")
+            logger.error(f"Error creating product: {e}")
             return exception_handler(e, "Product")
 
     @staticmethod
@@ -26,7 +26,7 @@ class ProductRepo:
             else:
                 return Product.objects.all()
         except Exception as e:
-            logger.error(f"Error updating customer: {e}")
+            logger.error(f"Error retrieving product : {e}")
             return exception_handler(e, "Product")
 
     @staticmethod
@@ -36,7 +36,7 @@ class ProductRepo:
             products.delete()
             return True
         except Exception as e:
-            logger.error(f"Error updating customer: {e}")
+            logger.error(f"Error deleting product: {e}")
 
             return exception_handler(e, "Product")
 
@@ -47,5 +47,5 @@ class ProductRepo:
             return Product.objects.filter(pk=pk).update(**request_data)
 
         except Exception as e:
-            logger.error(f"Error updating customer: {e}")
-            return exception_handler(e, "error")
+            logger.error(f"Error updating product: {e}")
+            return exception_handler(e, "product")
