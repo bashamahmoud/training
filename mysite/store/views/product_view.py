@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework import viewsets
 
-from .product_component import ProductComponent
+from ..components.product_component import ProductComponent
 
 
 class ProductView(viewsets.ViewSet):

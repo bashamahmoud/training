@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework import viewsets
 
-from .cart_component import CartComponent
+from ..components.cart_component import CartComponent
 
 
 class CartView(viewsets.ViewSet):

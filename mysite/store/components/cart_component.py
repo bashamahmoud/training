@@ -1,5 +1,5 @@
-from .cart_repo import CartRepo
-from .serializers import CartSerializer
+from ..repos.cart_repo import CartRepo
+from ..serializers import CartSerializer
 
 
 class CartComponent:
