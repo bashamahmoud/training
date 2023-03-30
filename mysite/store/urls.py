@@ -13,4 +13,5 @@ cart_router.register(r'products', cart_product_view.CartProductView, basename='c
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('', include(cart_router.urls)),
 ]

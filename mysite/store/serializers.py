@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Customer, Product, Cart
+from .models import Customer, Product, Cart, CartProduct
 
 
 # using serializers for viewset
@@ -28,5 +28,5 @@ class CartSerializer(serializers.ModelSerializer):
 
 class CartProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
+        model = CartProduct
         fields = '__all__'
