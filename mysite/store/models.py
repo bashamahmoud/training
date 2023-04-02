@@ -21,10 +21,10 @@ class Admin(User):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=60)
-    description = models.TextField()
-    price = models.IntegerField()
-    in_inventory = models.IntegerField()
+    name = models.CharField(max_length=60,default="product")
+    description = models.TextField(default="")
+    price = models.IntegerField(default=0)
+    in_inventory = models.IntegerField(default=0)
 
 
 class Cart(models.Model):

@@ -3,7 +3,8 @@ import logging
 
 from rest_framework.views import exception_handler
 
-from ..models import CartProduct
+from ..models import CartProduct, Product
+from .product_repo import ProductRepo
 
 logger = logging.getLogger('store')
 
@@ -13,9 +14,9 @@ class CartProductRepo:
     def get_cart_products(cart_pk=None, pk=None):
         try:
             if not pk:
-                cart_products = CartProduct.objects.filter(cart_id=cart_pk).select_related('cart','product')
+                cart_products = CartProduct.objects.filter(cart_id=cart_pk).prefetch_related()
             else:
-                cart_products = CartProduct.objects.filter(cart_id=cart_pk, product=pk).select_related('cart', 'product')
+                cart_products = CartProduct.objects.filter(cart_id=cart_pk, product_id=pk).prefetch_related()
             return cart_products
         except Exception as e:
             logger.error(f"Error retrieving cart: {e}")
