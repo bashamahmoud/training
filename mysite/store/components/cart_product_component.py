@@ -1,7 +1,6 @@
 from ..repos.cart_product_repo import CartProductRepo
 from ..serializers import CartProductSerializer
 
-
 class CartProductComponent:
     def __init__(self):
         self.cart_product_repo = CartProductRepo()
@@ -16,18 +15,10 @@ class CartProductComponent:
 
         return serializer.data
 
-    # def delete_cart(self, pk=None):
-    #     cart = self.cart_product_repo.delete_cart(pk)
-    #     return cart
-    #
-    # def update_cart(self, request, pk=None):
-    #     updated_cart = self.cart_product_repo.update_cart(request, pk)
-    #
-    #     return updated_cart
     def create_cart_product(self, request, cart_pk=None):
-        request.data['cart'] = cart_pk
+        product_id = request.data["product"]
         serializer = CartProductSerializer(data=request.data)
-        cart = self.cart_product_repo.create_cart_product(serializer)
+        cart = self.cart_product_repo.create_cart_product(serializer,product_id,cart_pk)
         return cart
 
     def delete_cart_product(self,cart_pk=None, pk=None):

@@ -13,19 +13,19 @@ class CartProductRepo:
     def get_cart_products(cart_pk=None, pk=None):
         try:
             if not pk:
-                cart_products = CartProduct.objects.filter(cart_id=cart_pk)
+                cart_products = CartProduct.objects.filter(cart_id=cart_pk).select_related('cart','product')
             else:
-                cart_products = CartProduct.objects.filter(cart_id=cart_pk, product=pk)
+                cart_products = CartProduct.objects.filter(cart_id=cart_pk, product=pk).select_related('cart', 'product')
             return cart_products
         except Exception as e:
             logger.error(f"Error retrieving cart: {e}")
             return exception_handler(e, "Cart product")
 
     @staticmethod
-    def create_cart_product(cart_product):
+    def create_cart_product(cart_product,product_id,cart_pk):
         try:
             cart_product.is_valid()
-            return cart_product.save()
+            return cart_product.save(product_id=product_id,cart_id=cart_pk)
         except Exception as e:
             logger.error(f"Error creating cart product: {e}")
             return exception_handler(e, "Cart product")
@@ -47,4 +47,4 @@ class CartProductRepo:
 
         except Exception as e:
             logger.error(f"Error updating Cart product: {e}")
-            return exception_handler(e, "Cart")
+            return exception_handler(e, "Cart product")

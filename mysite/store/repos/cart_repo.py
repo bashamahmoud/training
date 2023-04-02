@@ -22,9 +22,9 @@ class CartRepo:
     def get_cart(pk=None):
         try:
             if pk:
-                return Cart.objects.get(pk=pk)
+                return Cart.objects.prefetch_related('products').get(pk=pk)
             else:
-                return Cart.objects.all()
+                return Cart.objects.prefetch_related('products').all()
         except Exception as e:
             logger.error(f"Error retrieving Cart : {e}")
             return exception_handler(e, "Cart")

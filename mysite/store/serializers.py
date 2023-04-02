@@ -17,16 +17,20 @@ class DefaultCustomerSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'price', 'in_inventory']
 
 
 class CartSerializer(serializers.ModelSerializer):
+    products= ProductSerializer(many=True, read_only=True)
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['id', 'customer', 'products']
 
 
 class CartProductSerializer(serializers.ModelSerializer):
+    cart = CartSerializer(read_only=True)
+    product = ProductSerializer(read_only=True)
     class Meta:
         model = CartProduct
-        fields = '__all__'
+        fields = ['id', 'quantity', 'cart', 'product']
+
