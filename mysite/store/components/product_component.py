@@ -1,5 +1,5 @@
-from .product_repo import ProductRepo
-from .serializers import ProductSerializer
+from ..repos.product_repo import ProductRepo
+from ..serializers import ProductSerializer
 
 
 class ProductComponent:

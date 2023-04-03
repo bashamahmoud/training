@@ -1,7 +1,7 @@
 import json
 
-from .customer_repo import CustomerRepo
-from .serializers import DefaultCustomerSerializer
+from ..repos.customer_repo import CustomerRepo
+from ..serializers import DefaultCustomerSerializer
 
 
 class CustomerComponent:

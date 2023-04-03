@@ -11,26 +11,31 @@ class User(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return self.name
-
 
 class Customer(User):
     credit_card = models.CharField(max_length=60)
-
-    def __str__(self):
-        return self.name
 
 
 class Admin(User):
     pass
 
-    def __str__(self):
-        return self.name
-
 
 class Product(models.Model):
-    name = models.CharField(max_length=60)
-    description = models.TextField()
-    price = models.IntegerField()
-    in_inventory = models.IntegerField()
+    name = models.CharField(max_length=60,default="product")
+    description = models.TextField(default="")
+    price = models.IntegerField(default=0)
+    in_inventory = models.IntegerField(default=0)
+
+
+class Cart(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product, through='CartProduct')
+
+
+class CartProduct(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('cart', 'product')
