@@ -1,7 +1,10 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
 from ..components.cart_product_component import CartProductComponent
+from ..forms import CartProductForm
 
 
 class CartProductView(viewsets.ViewSet):
@@ -16,7 +19,7 @@ class CartProductView(viewsets.ViewSet):
         if not products:
             return JsonResponse({'error': 'Error while retrieving products of cart'}, safe=False, status=404)
 
-        return JsonResponse(products, safe=False)
+        return render(request, 'cart_product/list.html', {'cart_products': products})
 
         # GET request: /store/carts/{cart_id}/products/{pk}  #get cart product of given id
 
@@ -25,7 +28,7 @@ class CartProductView(viewsets.ViewSet):
         if not carts:
             return JsonResponse({'error': 'Error while retrieving cart'}, safe=False, status=404)
 
-        return JsonResponse(carts, safe=False)
+        return render(request, 'cart_product/retrieve.html', {'cart_product': carts})
 
         # POST request: /store/carts/{cart_id}/products #create new cart product
 
@@ -50,3 +53,9 @@ class CartProductView(viewsets.ViewSet):
         if updated_cart:
             return JsonResponse({'server': 'cart successfully updated'})
         return JsonResponse({'error': 'Error while updating cart'})
+
+    @action(detail=False, methods=['GET'])
+    def create_cart_product(self, request, cart_pk=None):
+        form = CartProductForm()
+        context = {'form': form, 'cart_pk': cart_pk}
+        return render(request, 'cart_product/create.html', context)

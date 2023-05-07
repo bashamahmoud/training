@@ -1,0 +1,36 @@
+{% block content %}
+<div style="text-align: center;">
+    <h1 style="color: #666;">Cart List</h1>
+    <p style="color: #999; font-size: 14px;">by Mahmoud Basha</p>
+    <table style="margin: auto; border-collapse: collapse; width: 80%;">
+        <thead style="background-color: #ddd;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px;">Cart ID</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">Customer ID</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">Products</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="background-color: #f2f2f2;">
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ cart.id }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ cart.customer_id }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;">
+                <ul style="list-style-type: none; padding: 0;">
+                    {% for product in cart.products %}
+                    <li>
+                        <div style="background-color: #F5F5F5; padding: 10px; margin-bottom: 5px;">
+                            <strong style="color: #666;">{{ product.name }}</strong><br>
+                            <span style="color: #999;">Id: {{ product.id }}</span><br>
+                            <span style="color: #666;">{{ product.description }}</span><br>
+                            <span style="color: #666;">Price: ${{ product.price }}</span><br>
+                            <span style="color: #666;">Inventory: {{ product.in_inventory }}</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
