@@ -1,7 +1,10 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
 from ..components.product_component import ProductComponent
+from ..forms import ProductForm
 
 
 class ProductView(viewsets.ViewSet):
@@ -15,7 +18,7 @@ class ProductView(viewsets.ViewSet):
         if not products:
             return JsonResponse({'error': 'Error while retrieving products list'}, safe=False, status=404)
 
-        return JsonResponse(products, safe=False)
+        return render(request, 'product/list.html', {'products': products})
 
     # GET request: /store/products/{pk}  #get product of given id
     def retrieve(self, request, pk=None):
@@ -23,7 +26,7 @@ class ProductView(viewsets.ViewSet):
         if not products:
             return JsonResponse({'error': 'Error while retrieving product'}, safe=False, status=404)
 
-        return JsonResponse(products, safe=False)
+        return render(request, 'product/retrieve.html', {'product': products})
 
     # POST request: /store/products #create new product
     def create(self, request):
@@ -45,3 +48,8 @@ class ProductView(viewsets.ViewSet):
         if updated_product:
             return JsonResponse({'server': 'product successfully updated'})
         return JsonResponse({'error': 'Error while updating product'})
+
+    @action(detail=False, methods=['GET'])
+    def create_product(self, request):
+        form = ProductForm()
+        return render(request, 'product/create.html', {'form': form})

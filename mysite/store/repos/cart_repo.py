@@ -10,10 +10,10 @@ logger = logging.getLogger('store')
 
 class CartRepo:
     @staticmethod
-    def create_cart(cart):
+    def create_cart(cart,customer_id=None):
         try:
             cart.is_valid()
-            return cart.save()
+            return cart.save(customer_id=customer_id)
         except Exception as e:
             logger.error(f"Error creating cart: {e}")
             return exception_handler(e, "Cart")

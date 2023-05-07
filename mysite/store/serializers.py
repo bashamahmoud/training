@@ -21,7 +21,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    products= ProductSerializer(many=True, read_only=True)
+    products = ProductSerializer(many=True, read_only=True)
+
     class Meta:
         model = Cart
         fields = ['id', 'customer_id', 'products']
@@ -30,7 +31,7 @@ class CartSerializer(serializers.ModelSerializer):
 class CartProductSerializer(serializers.ModelSerializer):
     cart = CartSerializer(read_only=True)
     product = ProductSerializer(read_only=True)
+
     class Meta:
         model = CartProduct
         fields = ['id', 'quantity', 'cart', 'product']
-

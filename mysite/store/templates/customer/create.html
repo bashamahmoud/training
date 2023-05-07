@@ -1,0 +1,13 @@
+
+{% block content %}
+<div style="text-align: center;">
+    <h1 style="color: #666;">Create Customer</h1>
+    <p style="color: #999; font-size: 14px;">by Mahmoud Basha</p>
+    <form method="POST" action="{% url 'customer-list' %}">
+        {% csrf_token %}
+        {%form%}
+        <br>
+        <button type="submit" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Create Customer</button>
+    </form>
+</div>
+{% endblock %}

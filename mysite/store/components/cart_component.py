@@ -7,8 +7,9 @@ class CartComponent:
         self.cart_repo = CartRepo()
 
     def create_cart(self, request):
+        customer_id=request.data["customer"]
         serializer = CartSerializer(data=request.data)
-        cart = self.cart_repo.create_cart(serializer)
+        cart = self.cart_repo.create_cart(serializer,customer_id)
         return cart
 
     def get_cart(self, pk=None):
